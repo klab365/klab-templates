@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run dotnet format
-        run: dotnet format --verify-no-changes -v diag
+        run: just check-format
 
   build-and-test:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: just build Release
 
       - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
+        run: just test Release

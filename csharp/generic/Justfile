@@ -1,5 +1,5 @@
-build:
-    dotnet build
+build configuration=Debug:
+    dotnet build -c {{configuration}}
 
 clean:
     dotnet clean
