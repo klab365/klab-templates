@@ -1,0 +1,142 @@
+variables:
+  - name: isVersion
+    value: $[startsWith(variables['build.sourceBranch'], 'refs/tags/')]
+  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
+      - name: versionNumber
+        value: $[replace(variables['Build.SourceBranchName'], 'V', '')]
+  - ${{ else }}:
+      - name: versionNumber
+        value: "0.0.0"
+  - name: solution
+    value: "**/*.sln"
+  - name: buildConfiguration
+    value: "Release"
+
+name: {{ creatorly.project_name }}_$(versionNumber).$(Build.BuildId)
+
+trigger:
+  tags:
+    include:
+      - V*
+  branches:
+    include:
+      - main
+    exclude:
+      - release/*
+
+pool:
+  vmImage: "windows-2022"
+
+steps:
+  - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
+
+  - task: NuGetToolInstaller@1
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      feedsToUse: 'config'
+      vstsFeed: '$(Build.SourcesDirectory)\nuget.config'
+
+  - task: DotNetCoreCLI@2
+    displayName: "Verify format of code"
+    inputs:
+      command: 'custom'
+      custom: 'format'
+      arguments: '--verify-no-changes --verbosity diagnostic'
+
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: "{{ creatorly.sonarcloud_service_name }}"
+      organization: "{{ creatorly.sonarcloud_organization }}"
+      scannerMode: "MSBuild"
+      projectKey: "{{ creatorly.sonarcloud_organization }}_{{ creatorly.project_name }}"
+      projectName: "{{ creatorly.project_name }}"
+      extraProperties: |
+        # Additional properties that will be passed to the scanner,
+        # Put one key=value per line, example:
+        # sonar.exclusions=**/*.bin
+        sonar.tsql.file.suffixes=sql,tsql
+        sonar.plsql.file.suffixes=pks,pkb
+        sonar.exclusions=**/*.ini,**/*Mocks/*,**/*.Tests/*,**/*.xml,**/*.html,**/*.xaml.cs
+
+  - task: DotNetCoreCLI@2
+    displayName: "Build"
+    inputs:
+      command: "build"
+      projects: "$(solution)"
+      arguments: "--configuration Release -p:Version=$(versionNumber).$(Build.BuildId) --no-restore"
+
+  - task: DotNetCoreCLI@2
+    displayName: "Run Tests"
+    inputs:
+      command: "test"
+      projects: "**/*.Tests.csproj"
+      arguments: '--configuration $(buildConfiguration) --no-restore'
+
+  - task: SonarCloudAnalyze@1
+
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: "300"
+
+  - task: DotNetCoreCLI@2
+    displayName: "Publish"
+    inputs:
+      command: "publish"
+      publishWebProjects: false
+      projects: "**/MuSTBoardUpdater.UI.csproj"
+      arguments: "--configuration Release -p:Version=$(versionNumber).$(Build.BuildId) --no-restore"
+      zipAfterPublish: false
+
+  - task: CopyFiles@2
+    displayName: "Copy desired files to Binaries Directory"
+    inputs:
+      SourceFolder: $(Build.SourcesDirectory)
+      Contents: |
+        **/*.dll
+        **/*.exe
+        **/*.config
+        **/*.xml
+        **/*.html
+        **/*.ini
+        **/*.sql
+        **/*.tsql
+        **/*.pks
+        **/*.pkb
+      TargetFolder: "$(Build.BinariesDirectory)/$(Build.BuildNumber)"
+      CleanTargetFolder: true
+      flattenFolders: true
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: "$(Build.BinariesDirectory)/$(Build.BuildNumber)/*"
+      includeRootFolder: true
+      archiveType: "zip"
+      archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip"
+      replaceExistingArchive: true
+      verbose: true
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "drop"
+      publishLocation: "Container"
+
+  - task: az-pipelines-2-sharepoint@0
+    displayName: 'Upload to sharepoint'
+    inputs:
+      tenantId: '$(TENANT_ID)'
+      clientId: '$(CLIENT_ID)'
+      clientSecret: '$(CLIENT_SECRET)'
+      driveId: '$(DRIVE_ID)'
+      targetFolder: ''
+      sourceFolder: ''
+      contents: '**'
+      conflictBehaviour: 'replace'
+      cleanTargetFolder: false
+      flattenFolders: false
+      failOnEmptySource: true

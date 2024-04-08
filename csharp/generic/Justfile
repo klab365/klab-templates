@@ -1,0 +1,16 @@
+build:
+    dotnet build
+
+clean:
+    dotnet clean
+    find . -name bin -type d -exec rm -rf {} \;
+    find . -name obj -type d -exec rm -rf {} \;
+
+test:
+    dotnet test
+
+format:
+    dotnet format -v diag
+
+check-format:
+    dotnet format --verify-no-changes -v diag

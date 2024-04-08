@@ -1,0 +1,9 @@
+placeholders:
+  project_name: "DemoDotnetProject"
+  project_description: "DemoDotnetProjectDescription"
+  solution_name: "DemoDotnetSolution"
+  company: "DemoDotnetCompany"
+  year: "2023"
+  dotnet_targetframework: "net8.0"
+  sonarcloud_organization: "DemoDotnetCompany"
+  sonarcloud_service_name: "DemoDotnetProject"
