@@ -1,0 +1,6 @@
+placeholders:
+  project_name: "DemoPythonApp"
+  project_slug: "demo_python_app"
+  project_description: "A Python App from template"
+  author: "Burak Kizilkaya"
+  author_email: "burak.kizilkaya@outlook.com"

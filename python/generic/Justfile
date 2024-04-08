@@ -1,0 +1,27 @@
+# Run `poetry install`
+install:
+    poetry install
+
+# run poetry to show deps
+showdeps: install
+    echo "CURRENT:"
+    poetry show --tree
+    echo
+    echo "LATEST:"
+    poetry show --latest
+
+# Runs and black in check mode
+lint: install
+    poetry run mypy .
+
+# Formats you code with Black
+format: install
+    poetry run black .
+    poetry run isort .
+
+# run pytest with coverage
+test: install
+    poetry run pytest \
+        --junitxml=pytest.xml \
+        --cov-report=term-missing:skip-covered \
+        --cov={{ creatorly.project_slug }} | tee pytest-coverage.txt

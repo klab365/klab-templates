@@ -1,0 +1,80 @@
+variables:
+  - name: isVersion
+    value: $[startsWith(variables['build.sourceBranch'], 'refs/tags/')]
+{% raw %}
+  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
+      - name: versionNumber
+        value: $[replace(variables['Build.SourceBranchName'], 'V', '')]
+  - ${{ else }}:
+      - name: versionNumber
+        value: "0.0.0"
+{%- endraw %}
+name: {{ creatorly.project_name }}-$(versionNumber).$(Build.BuildId)
+
+trigger:
+  tags:
+    include:
+      - V*
+  branches:
+    include:
+      - main
+    exclude:
+      - release/*
+
+jobs:
+
+# Our initial Job will lint and test our package against multiple Python versions in parallel
+# The name here is significant - we reference it later in the dependsOn property of the Package job
+- job: Build
+
+  # We use a strategy pattern to run everything twice - once for 3.6, and once for 3.7
+  # Each configuration has its own variables used to customize the build - note that `pythonVersion` has moved and now varies per job
+  # These jobs run in parallel (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?tabs=yaml&view=azure-devops#multi-configuration)
+  strategy:
+    matrix:
+      matrix:
+        linux:
+          pythonVersion: '3.10'
+          imageName: 'ubuntu-16.04'
+        windows:
+          pythonVersion: '3.10'
+          imageName: 'vs2017-win2016'
+
+    pool:
+      vmImage: $(imageName)
+
+    steps:
+    # Use a specific Python version
+    - task: UsePythonVersion@0
+      displayName: Use Python $(pythonVersion)
+      inputs:
+        versionSpec: $(pythonVersion)
+    
+    - script: curl -sSL https://install.python-poetry.org | python
+      displayName: Install Poetry
+
+    - script: make install
+      displayName: Install packages for build
+
+    - script: make format
+      displayName: Format
+
+    - script: make lint
+      displayName: Lint
+    
+    - script: |
+        pip install pytest-azurepipelines
+        make test
+      displayName: Test
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '**/pytest.xml'
+        testRunTitle: 'Python $(pythonVersion) $(Agent.OS)'
+      condition: succeededOrFailed()
+      displayName: Publish test results
+    
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
