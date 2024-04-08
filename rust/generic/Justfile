@@ -1,0 +1,31 @@
+set quiet
+
+# Building project for debug
+build:
+    echo "Building..."
+    cargo build
+
+# Building project for release
+release:
+    echo "Building for release..."
+    cargo build --release
+
+# Format project
+format:
+    echo "Formatting..."
+    cargo fmt --all
+
+# Lint project
+lint:
+    echo "Linting..."
+    cargo clippy --all-targets --all-features -- -D warnings
+
+# Run tests
+test:
+    echo "Testing..."
+    cargo test
+
+# Fix linting errors
+fix:
+    echo "Fixing..."
+    cargo fix

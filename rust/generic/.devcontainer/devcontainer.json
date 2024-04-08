@@ -1,0 +1,28 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/rust
+{
+  "name": "{{ creatorly.project_name }}_devcontainer",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "runArgs": [
+    "--rm"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "GitHub.copilot",
+        "mhutchie.git-graph",
+        "Swellaby.vscode-rust-test-adapter",
+        "eamodio.gitlens",
+        "asciidoctor.asciidoctor-vscode",
+        "EditorConfig.EditorConfig"
+      ]
+    }
+  }
+}
