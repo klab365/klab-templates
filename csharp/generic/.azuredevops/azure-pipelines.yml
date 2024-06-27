@@ -1,12 +1,14 @@
 variables:
   - name: isVersion
     value: $[startsWith(variables['build.sourceBranch'], 'refs/tags/')]
+{% raw %}
   - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
       - name: versionNumber
         value: $[replace(variables['Build.SourceBranchName'], 'V', '')]
   - ${{ else }}:
       - name: versionNumber
         value: "0.0.0"
+{%- endraw %}
   - name: solution
     value: "**/*.sln"
   - name: buildConfiguration
