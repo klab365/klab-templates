@@ -1,6 +1,6 @@
-# {{ creatorly.project_name }}
+# creatorly.project_name
 
-{{ creatorly.project_description }}
+creatorly.project_description
 
 ## Getting Started
 

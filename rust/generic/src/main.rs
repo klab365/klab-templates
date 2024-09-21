@@ -1,5 +1,5 @@
 fn main() {
-    println!("Hello, world!");
+    println!("Hello, world from the project 'creatorly.project_name'!");
 }
 
 #[cfg(test)]

@@ -1,4 +1,3 @@
-{% raw %}
 name: release
 
 permissions:
@@ -42,4 +41,3 @@ jobs:
           name: 🎉 {{ creatorly.project_name }} V${{ env.{{ creatorly.project_name }}_version }}
           draft: false
           prerelease: false
-{% endraw %}
