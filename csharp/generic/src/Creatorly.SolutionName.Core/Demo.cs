@@ -1,4 +1,4 @@
-﻿namespace creatorly.solution_name.Core;
+﻿namespace Creatorly.SolutionName.Core;
 
 public class Demo
 {

@@ -12,7 +12,7 @@ variables:
   - name: buildConfiguration
     value: "Release"
 
-name: creatorly.project_name_$(versionNumber).$(Build.BuildId)
+name: Creatorly.ProjectName_$(versionNumber).$(Build.BuildId)
 
 trigger:
   tags:
@@ -50,11 +50,11 @@ steps:
 
   - task: SonarCloudPrepare@1
     inputs:
-      SonarCloud: "{{ creatorly.sonarcloud_service_name }}"
-      organization: "{{ creatorly.sonarcloud_organization }}"
+      SonarCloud: "{{ Creatorly.sonarcloud_service_name }}"
+      organization: "{{ Creatorly.sonarcloud_organization }}"
       scannerMode: "MSBuild"
-      projectKey: "{{ creatorly.sonarcloud_organization }}_{{ creatorly.project_name }}"
-      projectName: "{{ creatorly.project_name }}"
+      projectKey: "{{ Creatorly.sonarcloud_organization }}_{{ Creatorly.ProjectName }}"
+      projectName: "{{ Creatorly.ProjectName }}"
       extraProperties: |
         # Additional properties that will be passed to the scanner,
         # Put one key=value per line, example:

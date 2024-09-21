@@ -1,7 +1,7 @@
 using Moq;
 using FluentAssertions;
 
-namespace creatorly.solution_name.Core.Tests;
+namespace Creatorly.SolutionName.Core.Tests;
 
 public class DemoTests
 {

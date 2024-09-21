@@ -3,9 +3,9 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <Platforms>x64</Platforms>
     <PlatformTarget>$(Platform)</PlatformTarget>
-    <TargetFramework>net8</TargetFramework>
-    <Copyright>Copyright (C) 2024 creatorly.company</Copyright>
-    <Company>creatorly.company</Company>
+    <TargetFramework>net8.0</TargetFramework>
+    <Copyright>Copyright (C) 2024 Creatorly.company</Copyright>
+    <Company>Creatorly.company</Company>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Recommended</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -21,6 +21,11 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <!-- Main projects -->
+  <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests'))">
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -28,13 +33,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- Main projects -->
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('Tests')) != false">
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-  </ItemGroup>
-
   <!-- Test projects -->
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('Tests'))">
+  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests'))">
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="xunit" Version="2.6.4" />
