@@ -8,6 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\{{ creatorly.solution_name }}.Core\{{ creatorly.solution_name }}.Core.csproj" />
+        <ProjectReference Include="..\..\src\creatorly.solution_name.Core\creatorly.solution_name.Core.csproj" />
     </ItemGroup>
 </Project>

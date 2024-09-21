@@ -1,8 +1,8 @@
-# {{ creatorly.solution_name }}
+# creatorly.solution_name
 
 [![Build Status](http://your-server:12345/job/badge/icon)](http://your-server:12345/job/http://your-server:12345/job/badge/icon/)
 
-{{ creatorly.project_description }}
+creatorly.project_description
 
 ## Getting Started
 

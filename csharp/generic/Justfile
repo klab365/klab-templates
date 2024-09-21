@@ -1,9 +1,7 @@
 set windows-powershell
 
-{% raw %}
 build configuration='Debug':
     dotnet build -c {{configuration}}
-{%- endraw %}
 
 clean:
     dotnet clean
