@@ -1,12 +1,9 @@
-name: release
-
-permissions:
-  contents: write
+name: Release
 
 on:
   push:
     tags:
-      - 'V*.*.*'
+      - "V*.*.*"
 
 jobs:
   build-and-release:
@@ -15,22 +12,22 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         target: [x86_64-unknown-linux-musl]
+
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          target: ${{ matrix.target }}
+      - name: Install just
+        uses: extractions/setup-just@v2
 
       - name: Extract version number
         id: extract_version
-        run: echo "{{ creatorly.project_name }}_version=$(echo ${{ github.ref }} | sed 's/refs\/tags\/V\(.*\)/\1/')" >> $GITHUB_ENV
+        run: echo "creatorly.project_name_version=$(echo ${{ github.ref }} | sed 's/refs\/tags\/V\(.*\)/\1/')" >> $GITHUB_ENV
 
-      - name: Build
-        run: cargo build --release --target ${{ matrix.target }}
+      - name: Install Docker for local builds
+        run: just build-docker $(id -u)
+
+      - name: Build CLI tool
+        run: just release ${{ env.creatorly.project_name_version }} --target ${{ matrix.target }}
 
       - name: Create release
         uses: softprops/action-gh-release@v1
@@ -38,6 +35,6 @@ jobs:
           files: |
             target/${{ matrix.target }}/release/creatorly
           tag_name: ${{ github.ref }}
-          name: 🎉 {{ creatorly.project_name }} V${{ env.{{ creatorly.project_name }}_version }}
+          name: 🎉 creatorly V${{ env.creatorly.project_name_version }}
           draft: false
           prerelease: false

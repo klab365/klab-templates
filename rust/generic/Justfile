@@ -1,31 +1,49 @@
 set quiet
 
-# Building project for debug
+CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -v $(pwd):/workspaces/creatorly.project_name -w /workspaces/creatorly.project_name rust-toolchain cargo' } else { 'cargo' }
+CMD_TTY := if path_exists('/.dockerenv') == "false" { 'docker run -it --rm -v $(pwd):/app -w /app rust-toolchain cargo' } else { 'cargo' }
+
+# build the docker image for ci
+build-docker id:
+    echo "Building Docker image..."
+    docker build -t rust-toolchain -f .devcontainer/Dockerfile --build-arg UID={{ id }} .
+
+# build the code
 build:
     echo "Building..."
-    cargo build
+    {{ CMD }} build
 
-# Building project for release
-release:
-    echo "Building for release..."
-    cargo build --release
+# build for release
+release version='0.0.0' *ARGS='':
+    echo "Building for release V{{ version }}"
+    sed -i 's/^version = ".*"$/version = "{{ version }}"/' Cargo.toml
+    {{ CMD }} build --release {{ARGS}}
 
-# Format project
+check-format:
+    echo "Checking formatting..."
+    {{ CMD }} fmt --all -- --check
+
+# format the code
 format:
     echo "Formatting..."
-    cargo fmt --all
+    {{ CMD }} fmt --all
 
-# Lint project
+# lint the code
 lint:
     echo "Linting..."
-    cargo clippy --all-targets --all-features -- -D warnings
+    {{ CMD }} clippy --all-targets --all-features -- -D warnings
 
-# Run tests
-test:
-    echo "Testing..."
-    cargo test
-
-# Fix linting errors
+# fix the code
 fix:
     echo "Fixing..."
-    cargo fix
+    {{ CMD }} fix --allow-staged
+
+# run the tests
+test:
+    echo "Testing..."
+    {{ CMD }} test
+
+# generate coverage
+coverage:
+    echo "Generating coverage..."
+    {{ CMD }} llvm-cov --lcov --output-path lcov.info
