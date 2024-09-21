@@ -29,9 +29,9 @@ pool:
 
 steps:
   - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '7.0.x'
+    inputs:
+      packageType: 'sdk'
+      version: '7.0.x'
 
   - task: NuGetToolInstaller@1
 
