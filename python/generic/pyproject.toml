@@ -3,11 +3,11 @@ requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "{{ creatorly.project_slug }}"
+name = "creatorly_project_slug"
 version = "0.0.1"
-description = "{{ creatorly.project_description }}"
+description = "creatorly_project_description"
 authors = [
-    "{{ creatorly.author }} <{{ creatorly.author_email }}>",
+    "creatorly_author <creatorly_author_email>",
 ]
 # Use identifier from https://spdx.org/licenses/
 license = "MIT"
@@ -18,7 +18,7 @@ documentation = "https://github.com"
 classifiers = [
     # https://pypi.org/classifiers/
 ]
-packages = [{include = "{{ creatorly.project_slug }}", from = "src"}]
+packages = [{include = "creatorly_project_slug", from = "src"}]
 
 [tool.poetry.urls]
 # If you publish you package on PyPI, these will appear in the Project Links section.
@@ -55,7 +55,7 @@ line-length = 120
 
 [tool.isort]
 line_length=120
-src_paths=["{{ creatorly.project_slug }}", "tests"]
+src_paths=["creatorly_project_slug", "tests"]
 multi_line_output=3
 include_trailing_comma=true
 force_grid_wrap=0

@@ -1,15 +1,14 @@
 variables:
   - name: isVersion
     value: $[startsWith(variables['build.sourceBranch'], 'refs/tags/')]
-{% raw %}
   - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
       - name: versionNumber
         value: $[replace(variables['Build.SourceBranchName'], 'V', '')]
   - ${{ else }}:
       - name: versionNumber
         value: "0.0.0"
-{%- endraw %}
-name: {{ creatorly.project_name }}-$(versionNumber).$(Build.BuildId)
+
+name: creatorly_project_name-$(versionNumber).$(Build.BuildId)
 
 trigger:
   tags:
@@ -53,18 +52,18 @@ jobs:
     - script: curl -sSL https://install.python-poetry.org | python
       displayName: Install Poetry
 
-    - script: make install
+    - script: just install
       displayName: Install packages for build
 
-    - script: make format
+    - script: just format
       displayName: Format
 
-    - script: make lint
+    - script: just lint
       displayName: Lint
     
     - script: |
         pip install pytest-azurepipelines
-        make test
+        just test
       displayName: Test
 
     - task: PublishTestResults@2

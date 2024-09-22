@@ -24,4 +24,4 @@ test: install
     poetry run pytest \
         --junitxml=pytest.xml \
         --cov-report=term-missing:skip-covered \
-        --cov={{ creatorly.project_slug }} | tee pytest-coverage.txt
+        --cov=creatorly_project_slug | tee pytest-coverage.txt

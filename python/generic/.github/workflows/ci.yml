@@ -1,4 +1,4 @@
-name: "CI - {{ creatorly.project_name }}"
+name: "CI"
 
 on:
   push:
@@ -29,19 +29,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          make install
+          just install
 
       - name: Lint code
         run: |
-          make lint
+          just lint
 
       - name: Format code
         run: |
-          make format
+          just format
 
       - name: Run tests
         run: |
-          pmake test
+          just test
 
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@main
