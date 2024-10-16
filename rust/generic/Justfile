@@ -1,12 +1,12 @@
 set quiet
 
-CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -v $(pwd):/workspaces/creatorly.project_name -w /workspaces/creatorly.project_name rust-toolchain cargo' } else { 'cargo' }
+CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -v $(pwd):/workspaces/creatorly.project_name -w /workspaces/creatorly.project_name creatorly.project_name-toolchain cargo' } else { 'cargo' }
 CMD_TTY := if path_exists('/.dockerenv') == "false" { 'docker run -it --rm -v $(pwd):/app -w /app rust-toolchain cargo' } else { 'cargo' }
 
 # build the docker image for ci
 build-docker id:
     echo "Building Docker image..."
-    docker build -t rust-toolchain -f .devcontainer/Dockerfile --build-arg UID={{ id }} .
+    docker build -t creatorly.project_name-toolchain -f .devcontainer/Dockerfile --build-arg UID={{ id }} .
 
 # build the code
 build:
