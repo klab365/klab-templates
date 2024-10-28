@@ -7,21 +7,6 @@ on:
     branches: [main]
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: "7.0.x"
-
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Run dotnet format
-        run: just check-format
-
   build-and-test:
     runs-on: ubuntu-latest
 
@@ -31,13 +16,16 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "7.0.x"
+          dotnet-version: "8.0.x"
 
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
-        run: just build Release
+      - name: Run dotnet format
+        run: just check-format
 
       - name: Test
         run: just test Release
+
+      - name: Release
+        run: just release 0.0.0

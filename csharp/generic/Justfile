@@ -1,18 +1,26 @@
 set windows-powershell
 
-build configuration='Debug':
+# build the project
+build configuration='Debug' *args='':
     dotnet build -c {{configuration}}
 
+release version='0.0.0':
+    just build Releae /p:Version={{version}}
+
+# clean the project
 clean:
     dotnet clean
     find . -name bin -type d -exec rm -rf {} \;
     find . -name obj -type d -exec rm -rf {} \;
 
+# run the tests
 test:
     dotnet test
 
-format:
-    dotnet format -v diag
+# format the code using dotnet format and the .editorconfig file
+format *args:
+    dotnet format -v diag {{args}}
 
+# check the code format using dotnet format and the .editorconfig file
 check-format:
-    dotnet format --verify-no-changes -v diag
+    just format --verify-no-changes

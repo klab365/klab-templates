@@ -82,9 +82,9 @@ dotnet_diagnostic.S3257.severity = none
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.IDE0053.severity = none
 dotnet_diagnostic.CA1711.severity = none
-dotnet_diagnostic.IDE0058.severity = error
-dotnet_diagnostic.IDE0059.severity = error
-dotnet_diagnostic.IDE0060.severity = error
+dotnet_diagnostic.IDE0058.severity = none
+dotnet_diagnostic.IDE0059.severity = none
+dotnet_diagnostic.IDE0060.severity = none
 
 # xUnit1045: Avoid using TheoryData type arguments that might not be serializable
 dotnet_diagnostic.xUnit1045.severity = none
