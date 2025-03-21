@@ -1,5 +1,5 @@
 placeholder_id: "creatorly"
-placeholder_delimeter: "."
+placeholder_delimeter: "_"
 placeholders:
   project_name: "demo-project"
   project_description: "Description of the project!"
