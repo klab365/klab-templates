@@ -1,6 +1,6 @@
 [package]
-name = "creatorly.project_name"
+name = "creatorly_project_name"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]

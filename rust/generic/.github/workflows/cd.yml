@@ -21,20 +21,20 @@ jobs:
 
       - name: Extract version number
         id: extract_version
-        run: echo "creatorly.project_name_version=$(echo ${{ github.ref }} | sed 's/refs\/tags\/V\(.*\)/\1/')" >> $GITHUB_ENV
+        run: echo "creatorly_project_name_version=$(echo ${{ github.ref }} | sed 's/refs\/tags\/V\(.*\)/\1/')" >> $GITHUB_ENV
 
       - name: Install Docker for local builds
         run: just build-docker $(id -u)
 
       - name: Build CLI tool
-        run: just release ${{ env.creatorly.project_name_version }} --target ${{ matrix.target }}
+        run: just release ${{ env.creatorly_project_name_version }} --target ${{ matrix.target }}
 
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/${{ matrix.target }}/release/creatorly
+            target/${{ matrix.target }}/release/creatorly_project_name
           tag_name: ${{ github.ref }}
-          name: 🎉 creatorly V${{ env.creatorly.project_name_version }}
+          name: 🎉 creatorly V${{ env.creatorly_project_name_version }}
           draft: false
           prerelease: false

@@ -1,21 +1,24 @@
-FROM mcr.microsoft.com/devcontainers/rust:1
+FROM mcr.microsoft.com/devcontainers/rust:latest
 
 # Pass ID to the container
-ARG UID
+ARG UID=1000
+ARG RUST_VERSION=1.85.1
+
 RUN usermod -u $UID vscode
 
-USER vscode
-
 # Install rust version and components
-RUN rustup default 1.80
-RUN rustup target add x86_64-unknown-linux-musl
-RUN rustup component add rustfmt
-RUN rustup component add clippy
-RUN rustup component add llvm-tools-preview
+RUN <<EOF
+    rustup default $RUST_VERSION
+    rustup target add x86_64-unknown-linux-musl
+    rustup component add rustfmt
+    rustup component add clippy
+    rustup component add llvm-tools-preview
 
-# Install cago-llvm-cov for code coverage
-RUN curl \
+    curl \
     --proto '=https' \
     --tlsv1.2 -fsSL \
     https://github.com/taiki-e/cargo-llvm-cov/releases/latest/download/cargo-llvm-cov-$(rustc -vV | grep '^host:' | cut -d' ' -f2).tar.gz \
     | tar xzf - -C "/usr/local/cargo/bin"
+
+    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+EOF
