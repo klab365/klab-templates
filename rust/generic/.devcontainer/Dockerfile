@@ -8,6 +8,9 @@ RUN usermod -u $UID vscode
 
 # Install rust version and components
 RUN <<EOF
+    apt update
+    apt install -y git-lfs
+
     rustup default $RUST_VERSION
     rustup target add x86_64-unknown-linux-musl
     rustup component add rustfmt
@@ -21,4 +24,8 @@ RUN <<EOF
     | tar xzf - -C "/usr/local/cargo/bin"
 
     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
+    # cleanup
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
 EOF
