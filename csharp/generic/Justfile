@@ -1,5 +1,3 @@
-set windows-powershell
-
 # build the project
 build configuration='Debug' *args='':
     dotnet build -c {{configuration}}
