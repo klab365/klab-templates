@@ -13,7 +13,7 @@ clean:
 
 # run the tests
 test:
-    dotnet test
+    dotnet run --project tests/Creatorly.SolutionName.Core.UnitTests/Creatorly.SolutionName.Core.UnitTests.csproj
 
 # format the code using dotnet format and the .editorconfig file
 format *args:
