@@ -1,11 +1,12 @@
 set quiet
 
 CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -v $(pwd):/workspaces/creatorly_project_name -w /workspaces/creatorly_project_name creatorly_project_name-toolchain cargo' } else { 'cargo' }
+BACON := if path_exists('/.dockerenv') == "false" { 'docker run --rm -it -v $(pwd):/workspaces/creatorly_project_name -w /workspaces/creatorly_project_name creatorly_project_name-toolchain bacon' } else { 'bacon' }
 
 # build the docker image for ci
-build-docker id:
+build-ci-docker:
     echo "Building Docker image..."
-    docker build -t creatorly_project_name-toolchain -f .devcontainer/Dockerfile --build-arg UID={{ id }} .
+    docker build -t creatorly_project_name-toolchain --target ci --build-arg UID=$(id -u) .
 
 # build the code
 build:
@@ -46,3 +47,8 @@ test:
 coverage:
     echo "Generating coverage..."
     {{ CMD }} llvm-cov --lcov --output-path lcov.info
+
+# watch with bacon
+watch job='check':
+    echo "Starting bacon {{ job }}..."
+    {{ BACON }} {{ job }}

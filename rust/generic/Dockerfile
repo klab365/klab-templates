@@ -1,19 +1,11 @@
-FROM rust:1.89.0-slim-bookworm AS ci
+FROM rust:1.92.0-slim-bookworm AS ci
 
 # Install rust version and components
 RUN <<EOF
     set -eu
-    apt update
-    apt install -y curl
-
-    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
     # Install rust components for CI
     rustup component add rustfmt clippy
-
-    # cleanup
-    apt-get clean
-    rm -rf /var/lib/apt/lists/*
 EOF
 
 FROM ci AS development
@@ -24,6 +16,8 @@ RUN <<EOF
     set -eu
     apt update
     apt install -y zsh git curl sudo pkg-config libssl-dev
+
+    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
     # create a user dev with the UID and the sudo group
     useradd -m -u $UID -G sudo dev
@@ -43,7 +37,7 @@ RUN <<EOF
     su - dev -c 'echo "export CARGO_HOME=/home/dev/.cargo" >> ~/.zshrc'
 
     # Install Rust tools
-    cargo install cargo-watch
+    cargo install --locked bacon
 
     # cleanup
     apt-get clean
