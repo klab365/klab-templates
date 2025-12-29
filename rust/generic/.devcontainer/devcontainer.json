@@ -5,19 +5,12 @@
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
   "build": {
     "dockerfile": "Dockerfile",
+    "target": "development",
     "args": {
       "UID": "1000"
     }
   },
-  "remoteUser": "vscode",
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-  },
-
-  "mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
-	],
-
+  "remoteUser": "dev",
   "customizations": {
     "vscode": {
       "extensions": [
