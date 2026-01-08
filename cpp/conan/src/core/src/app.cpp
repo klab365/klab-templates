@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace myapp {
+namespace core {
 
 App::App() : version_("1.0.0") {}
 
@@ -13,4 +13,4 @@ void App::run() {
 
 std::string App::getVersion() const { return version_; }
 
-}  // namespace myapp
+} 

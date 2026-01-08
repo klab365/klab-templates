@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace myapp {
+namespace core {
 
 class App {
    public:
@@ -14,4 +14,4 @@ class App {
     std::string version_;
 };
 
-}  // namespace myapp
+} 

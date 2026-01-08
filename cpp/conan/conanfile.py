@@ -22,7 +22,7 @@ class MyAppConan(ConanFile):
     def requirements(self):
         # Add your dependencies here, e.g.:
         # self.requires("fmt/10.1.1")
-        pass
+        self.test_requires("gtest/1.17.0")
     
     def layout(self):
         cmake_layout(self, build_folder="build")

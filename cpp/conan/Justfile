@@ -1,4 +1,4 @@
-CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -u $(id -u):$(id -g) -v $(pwd):/workspaces/creatorly_project_name -w /workspaces/creatorly_project_name creatorly_project_name-toolchain' } else { '' }
+CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -u $(id -u):$(id -g) -v $(pwd):/workspaces/creatorly_project_name -v conan2-data:/home/dev/.conan2 -w /workspaces/creatorly_project_name creatorly_project_name-toolchain' } else { '' }
 
 # build the docker image for ci
 build-ci-docker:
@@ -10,9 +10,6 @@ setup:
     {{CMD}} python3 -m venv .venv
     {{CMD}} .venv/bin/pip3 install -r requirements.txt
 
-test:
-    {{CMD}} .venv/bin/conan install --help
-
 build profile build_type="Debug":
     {{CMD}} .venv/bin/conan install . --profile:host={{profile}} --profile:build={{profile}} --settings build_type={{build_type}} --build=missing
     {{CMD}} cmake --preset conan-{{lowercase(build_type)}}
@@ -23,4 +20,8 @@ format:
 
 lint build_type="Debug":
     {{CMD}} clang-tidy -p build/{{build_type}} $(find src -name '*.cpp')
+
+test build_type="Debug":
+    {{CMD}} cmake --build --preset conan-{{lowercase(build_type)}}
+    {{CMD}} ctest --test-dir build/{{build_type}} --output-on-failure
 
