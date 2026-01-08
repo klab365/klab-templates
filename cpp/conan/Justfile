@@ -24,5 +24,5 @@ lint build_type="Debug":
 test build_type="Debug":
     {{CMD}} cmake --build --preset conan-{{lowercase(build_type)}}
     {{CMD}} ctest --test-dir build/{{build_type}} --output-on-failure
-    {{CMD}} gcovr -r . --object-directory=build/{{build_type}} --xml -o coverage.xml
+    {{CMD}} gcovr -r . --object-directory=build/{{build_type}} --exclude '.*(tests).*' --xml -o coverage.xml
 
