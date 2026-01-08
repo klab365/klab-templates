@@ -6,7 +6,7 @@ RUN <<EOF
 
     apt update
     apt install -y zsh git curl sudo pkg-config libssl-dev python3 python3-pip python3-venv
-    apt install -y build-essential cmake ninja-build clang-format clang-tidy
+    apt install -y build-essential cmake ninja-build clang-format clang-tidy gcovr
 
     # create a user dev with the UID and the sudo group
     useradd -m -u $UID -G sudo dev
