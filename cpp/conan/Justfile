@@ -1,0 +1,20 @@
+CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -u $(id -u):$(id -g) -v $(pwd):/workspaces/creatorly_project_name -w /workspaces/creatorly_project_name creatorly_project_name-toolchain' } else { '' }
+
+# build the docker image for ci
+build-ci-docker:
+    echo "Building Docker image..."
+    docker build -t creatorly_project_name-toolchain --target ci --build-arg UID=$(id -u) .
+
+setup:
+    {{CMD}} rm -rf .venv
+    {{CMD}} python3 -m venv .venv
+    {{CMD}} .venv/bin/pip3 install -r requirements.txt
+
+test:
+    {{CMD}} .venv/bin/conan install --help
+
+build profile build_type="Debug":
+    {{CMD}} .venv/bin/conan install . --profile:host={{profile}} --profile:build={{profile}} --settings build_type={{build_type}} --build=missing
+    {{CMD}} cmake --preset conan-{{lowercase(build_type)}}
+    {{CMD}} cmake --build --preset conan-{{lowercase(build_type)}}
+
