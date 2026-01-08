@@ -5,13 +5,13 @@
 namespace myapp {
 
 class App {
-public:
+   public:
     App();
     void run();
     std::string getVersion() const;
 
-private:
+   private:
     std::string version_;
 };
 
-} // namespace myapp
+}  // namespace myapp

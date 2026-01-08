@@ -18,3 +18,9 @@ build profile build_type="Debug":
     {{CMD}} cmake --preset conan-{{lowercase(build_type)}}
     {{CMD}} cmake --build --preset conan-{{lowercase(build_type)}}
 
+format:
+    {{CMD}} clang-format -i $(find src -name '*.cpp' -o -name '*.h')
+
+lint build_type="Debug":
+    {{CMD}} clang-tidy -p build/{{build_type}} $(find src -name '*.cpp')
+

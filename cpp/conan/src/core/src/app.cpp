@@ -1,4 +1,5 @@
 #include "core/app.h"
+
 #include <iostream>
 
 namespace myapp {
@@ -10,8 +11,6 @@ void App::run() {
     std::cout << "Version: " << getVersion() << std::endl;
 }
 
-std::string App::getVersion() const {
-    return version_;
-}
+std::string App::getVersion() const { return version_; }
 
-} // namespace myapp
+}  // namespace myapp
