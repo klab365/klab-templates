@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app.h"
 #include <iostream>
 
 namespace myapp {
