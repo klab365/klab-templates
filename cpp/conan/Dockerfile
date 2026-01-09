@@ -14,6 +14,10 @@ RUN <<EOF
 
     # install cpp tools
 
+    # Create .conan2 directory for dev user and set permissions
+    mkdir -p /home/dev/.conan2
+    chown -R dev:dev /home/dev/.conan2
+
     # cleanup
     apt-get clean
     rm -rf /var/lib/apt/lists/*
@@ -40,10 +44,6 @@ RUN <<EOF
     mkdir -p /home/dev/.cargo
     chown -R dev:dev /home/dev/.cargo
     su - dev -c 'echo "export CARGO_HOME=/home/dev/.cargo" >> ~/.zshrc'
-
-    # Create .conan2 directory for dev user and set permissions
-    mkdir -p /home/dev/.conan2
-    chown -R dev:dev /home/dev/.conan2
 
     # cleanup
     apt-get clean

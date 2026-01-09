@@ -3,6 +3,7 @@ CMD := if path_exists('/.dockerenv') == "false" { 'docker run --rm -u $(id -u):$
 # build the docker image for ci
 build-ci-docker:
     echo "Building Docker image..."
+    docker volume create conan2-data
     docker build -t creatorly_project_name-toolchain --target ci --build-arg UID=$(id -u) .
 
 setup:
@@ -21,8 +22,9 @@ format:
 lint build_type="Debug":
     {{CMD}} clang-tidy -p build/{{build_type}} $(find src -name '*.cpp')
 
-test build_type="Debug":
+test build_type="Debug" output_dir="./tmp/test_results":
+    {{CMD}} mkdir -p {{output_dir}}
     {{CMD}} cmake --build --preset conan-{{lowercase(build_type)}}
-    {{CMD}} ctest --test-dir build/{{build_type}} --output-on-failure
-    {{CMD}} gcovr -r . --object-directory=build/{{build_type}} --exclude '.*(tests).*' --xml -o coverage.xml
+    {{CMD}} env GTEST_OUTPUT="xml:{{output_dir}}/" ctest --test-dir build/{{build_type}} --output-on-failure
+    {{CMD}} gcovr -r . --object-directory=build/{{build_type}} --exclude '.*(tests).*' --xml -o {{output_dir}}/coverage.xml
 
